@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Calculator</title>
+		<style>
+			* {
+				margin: 0;
+				padding: 0;
+				box-sizing: border-box;
+			}
+			body {
+				height: 100vh;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				background-color: cadetblue;
+			}
+			.calculator {
+				width: 200px;
+				background-color: grey;
+				padding: 10px;
+			}
+			#result {
+				/* width: 90%; */
+				height: 30px;
+				display: flex;
+				align-items: center;
+				justify-content: flex-end;
+				background-color: #fff;
+				padding: 5px;
+			}
+			.buttons {
+				margin-top: 20px;
+			}
+			.buttons button {
+				min-width: 23.3%;
+				margin-bottom: 5px;
+				outline: none;
+				border: 1px solid;
+				border-radius: 5px;
+        background-color: #fff;
+			}
+			.buttons button:hover {
+				cursor: pointer;
+				background-color: yellow;
+			}
+      .isChoosen {
+        background-color: yellow !important;
+      }
+		</style>
+	</head>
+	<body>
+		<div class="calculator">
+			<div id="result">0</div>
+			<div class="buttons">
+				<button onclick="removeAll()">AC</button>
+				<button onclick="addPositiveOrNegative()">+/</button>
+				<button class="button" onclick="calculate(this)">%</button>
+				<button class="button" onclick="calculate(this)">/</button>
+				<button onclick="addNumber(7)">7</button>
+				<button onclick="addNumber(8)">8</button>
+				<button onclick="addNumber(9)">9</button>
+				<button class="button" onclick="calculate(this)">X</button>
+				<button onclick="addNumber(4)">4</button>
+				<button onclick="addNumber(5)">5</button>
+				<button onclick="addNumber(6)">6</button>
+				<button class="button" onclick="calculate(this)">-</button>
+				<button onclick="addNumber(1)">1</button>
+				<button onclick="addNumber(2)">2</button>
+				<button onclick="addNumber(3)">3</button>
+				<button class="button" onclick="calculate(this)">+</button>
+				<button onclick="addNumber(0)" style="min-width: 48.8%">0</button>
+				<button onclick="addDecimal()">,</button>
+				<button onclick="calculateResult()">=</button>
+			</div>
+		</div>
+	</body>
+</html>
+<script>
+	const resultDiv = document.getElementById("result")
+  const buttons = document.querySelectorAll(".button")
+	let num1 = null,
+		num2 = null;
+	let finalOperator = null;
+  let checkOperatorClicked = false
+
+	function removeAll() {
+		resultDiv.innerHTML = "0";
+    num1 = null
+    num2 = null
+	}
+	function addNumber(value) {
+		if (resultDiv.innerHTML === "0" || checkOperatorClicked) {
+			resultDiv.innerHTML = "";
+      checkOperatorClicked = false
+		}
+		resultDiv.innerHTML += value;
+	}
+	function calculate(operator) {
+    //Tim den tat ca button co class button => Remove class isChoosen
+    buttons.forEach(function(button) {
+      button.classList.remove("isChoosen")
+    });
+    operator.classList.add("isChoosen")
+		if (num1 === null) {
+			num1 = Number(resultDiv.innerHTML);
+		} else {
+      const temp = Number(resultDiv.innerHTML)
+      switch (finalOperator) {
+        case "+":
+          resultDiv.innerHTML = (num1 + temp).toString()
+          num1 += temp
+          break;
+        case "-":
+          resultDiv.innerHTML = (num1 - temp).toString()
+          num1 -= temp
+          break;
+        case 'X':
+          resultDiv.innerHTML = (num1 * temp).toString()
+          num1 *= temp
+          break;
+        case '/':
+          resultDiv.innerHTML = (num1 / temp).toString()
+          num1 /= temp
+          break;
+        case '%':
+          resultDiv.innerHTML = (num1 % temp).toString()
+          num1 %= temp
+          break;
+        default:
+          break;
+		  }
+    }
+		finalOperator = operator.innerHTML;
+    checkOperatorClicked = true
+	}
+
+	function calculateResult() {
+    if (num2 === null) {
+      num2 = Number(resultDiv.innerHTML);
+    }
+		switch (finalOperator) {
+			case "+":
+        resultDiv.innerHTML = (num1 + num2).toString()
+				break;
+			case "-":
+        resultDiv.innerHTML = (num1 - num2).toString()
+				break;
+      case 'X':
+        resultDiv.innerHTML = (num1 * num2).toString()
+        break;
+      case '/':
+        resultDiv.innerHTML = (num1 / num2).toString()
+        break;
+      case '%':
+        resultDiv.innerHTML = (num1 % num2).toString()
+        break;
+			default:
+				break;
+		}
+    //Reset
+    num1 = null
+    num2 = null
+    finalOperator = null
+    checkOperatorClicked = true
+    buttons.forEach(function(button) {
+      button.classList.remove("isChoosen")
+    });
+	}
+</script>
